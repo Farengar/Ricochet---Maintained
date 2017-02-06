@@ -1,0 +1,12 @@
+Add classes
+Make projectile direction in relation to player, not 0,0
+Delete projectiles using setTimeout()
+Add raycasting collision detection to projectiles
+Add ricochet to projectiles
+Reduce projectile firing speed
+Add outer walls + more obstacles
+Add multiplayer support
+Add match data - click to start, lives, destruction, etc.
+Fix wall collision - too buggy + inaccurate
+Add leaderboard
+Clean up
