@@ -1,29 +1,33 @@
+//Farengar
+
+
+//Setup
 var SCREEN_WIDTH = window.innerWidth,
 SCREEN_HEIGHT = window.innerHeight,
 SCREEN_WIDTH_HALF = SCREEN_WIDTH  / 2,
 SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
 
-var scene;  // Contains representation information for all objects in your 3D space, 
-var camera; // An object that will act as your viewport into the scene. (determins what we actually see)
-var renderer; // Draws in our browser and displays the objects in the scene from the point of view of the camera.
+var scene;
+var camera;
+var renderer;
 
-// initialize camera
 camera = new THREE.OrthographicCamera( -SCREEN_WIDTH_HALF, SCREEN_WIDTH_HALF, SCREEN_HEIGHT_HALF, -SCREEN_HEIGHT_HALF, 1, 100 );
-// Initialize renderer 
+
 renderer = new THREE.WebGLRenderer();
-renderer.setClearColor( 0x000000 ); // background color 
+renderer.setClearColor( 0x000000 ); //background color 
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-document.body.appendChild( renderer.domElement ); // place the renderer in our html DOM
+document.body.appendChild( renderer.domElement ); //place the renderer in our html DOM
 
-
-// Initialize scene 
 scene = new THREE.Scene();
 
-// Place camera within the scene
 scene.add(camera);
+ 
+var light = new THREE.AmbientLight(0xffffff);
+scene.add( light );
 
-// Add meshes to the scene to render
+
+//Add meshes to the scene
 var pGeometry = new THREE.CubeGeometry( 25, 25, 10);
 var p1Material = new THREE.MeshPhongMaterial({color: 0xEE0000});
 
@@ -37,11 +41,13 @@ var arena = new THREE.Mesh(arenaGeometry, arenaMaterial);
 var p1 = new THREE.Mesh(pGeometry, p1Material);
 
 
-
-
-// Add them to the scene
+//Add them to the scene
 scene.add(p1);
 scene.add(arena);
+
+p1.position.set(0,0,-11);
+arena.position.set(0,0,-25);
+
 
 //Inner angled wall coordinates
 var wallListX1 = [-100,-100,-100,-100,-100,-100,100,100,100,100,100,100,
@@ -66,14 +72,6 @@ for (i = 0; i < wallList1.length; i++) {
 for (i = 0; i < wallList1.length; i++) {
 	wallList1[i].position.set(wallListX1[i],wallListY1[i], -11);
 }
-
-p1.position.set(0,0,-11);
-arena.position.set(0,0,-25);
-
-
-// Add light 
-var light = new THREE.AmbientLight(0xffffff); // soft white light
-scene.add( light );
 
 
 //Raycasting:
@@ -102,8 +100,7 @@ var goXf = true
 var goXb = true
 
 
-
-var speed = 1
+//Key presses, mouse position, and mouse click detection
 
 function handleKeyDown(event) {
 	if (event.keyCode == 87) { //87 is "w"
@@ -182,6 +179,7 @@ var projList1 = [];
 for (i = 0; i < 100; i++) projList1[i] = new THREE.Mesh(projectileGeometry, projectileMesh);
 
 
+var speed = 1;
 
 
 animate(); 
@@ -198,11 +196,11 @@ function animate() {
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// 																																	 ///
-		///  NOTE: BUG CONFIRMED - CONDITIONAL ISSUE LOCKING ONE DIRECTION OF MOVEMENT WHEN IN A CORNER PUSHING MULTIPLE DIRECTIONs - FIX LATER  ///
+		///  NOTE: BUG CONFIRMED - CONDITIONAL ISSUE LOCKING ONE DIRECTION OF MOVEMENT WHEN IN A CORNER PUSHING MULTIPLE DIRECTIONS - FIX LATER  ///
 		///																																		 ///
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		// Disable that direction if true
+		//Disable that direction if true
 		if (collisions.length > 0 && collisions[0].distance <= sqDistance) {
 			if ((i == 0 || i == 1 || i == 7) && window.isWDown){
 				goYf = false;}
@@ -223,7 +221,7 @@ function animate() {
 		}
 	}
 
-
+	
 	if(window.isWDown){
 		if(goYf){
 			p1.translateY(speed)}
@@ -251,14 +249,14 @@ function animate() {
 	}
 
 
-	///////////////////////////////////////////////////////
-	///      INSERT PROJECTILE PHYSICS HERE             ///
+	  ///////////////////////////////////////////////////////
+	 ///        INSERT PROJECTILE PHYSICS HERE           ///
 	///////////////////////////////////////////////////////
 	console.log(projectileCount);
 	if(projectileCount > 0) {
 		for(i=1; i <= projectileCount; i++){
-		projList1[i].translateX(projList1VectorX[i]);
-		projList1[i].translateY(projList1VectorY[i]);		    
+			projList1[i].translateX(projList1VectorX[i]);
+			projList1[i].translateY(projList1VectorY[i]);		    
 		}
 	}
 
